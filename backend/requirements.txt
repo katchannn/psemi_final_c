@@ -3,3 +3,4 @@ uvicorn
 feedparser
 requests
 html2text
+BeautifulSoup4
