@@ -1,9 +1,10 @@
 import asyncio
 from fastapi import FastAPI
 from services.service import get_news
+from routers import router
 
 app = FastAPI()
-
+app.include_router(router.router)
 
 @app.get("/")
 async def root():
