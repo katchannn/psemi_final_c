@@ -3,3 +3,4 @@ uvicorn
 feedparser
 requests
 BeautifulSoup4
+pymongo
