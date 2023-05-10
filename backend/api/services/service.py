@@ -9,6 +9,8 @@ rss_url = "https://feeds.feedburner.com/TheHackersNews"
 def get_news():
     list_html = extract_link_from_rss(rss_url)
     pretext = extract_text_from_html(list_html)
+    #ニュースが重複しているか確認する
+    
     html_parse(pretext)
 
 # RSSからlinkタグのURLを取得する
