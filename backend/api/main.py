@@ -1,6 +1,6 @@
 import asyncio
 from fastapi import FastAPI
-from services.service import get_news
+from services.news import get_news
 
 app = FastAPI()
 
