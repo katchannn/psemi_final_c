@@ -23,3 +23,6 @@ print("Connected to MongoDB")
 
 def db_create_news(news):
     pass
+
+def db_get_news(news_id):
+    pass
