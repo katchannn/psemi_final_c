@@ -4,15 +4,65 @@ import openai
 import os
 import json
 from bs4 import BeautifulSoup
+from cruds.news import *
+
+#openAIキー
+variable1 = os.environ.get('OPENAI_API_KEY')
+openai.api_key = variable1
+
+#mongoDBのやつ
+#env
+HOST = 'mongo'
+PORT = 27017
+USERNAME = 'root'
+PASSWORD = 'password'
+
+#connect to mongodb
+DATABASE_URL = f'mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}'
+client = MongoClient(DATABASE_URL)
+
 
 # RSSのURL
 rss_url = "https://feeds.feedburner.com/TheHackersNews"
 
 # RSSからニュースを取得する
 def get_news() -> str:
+    #被っていない日時の記事を取るためのidx
+    idx=0
+    idx_lists=[]
+    print("get_news起動!!") #デバッグプリント
+    #ニュースの公開日をとってくる
+    list_time = extract_pub_time()
+    for time in list_time:
+        # 日時がDBに登録されているか確認
+        isCollected = db_serch_time(time)
+        if isCollected is not None:
+            print("時間関係起動!!") #デバッグプリント
+            db_create_time(time)
+            idx_lists.append(idx)
+            idx+=1
+        else:
+            idx+=1
+            continue
+    #html持ってくる
     list_html = extract_link_from_rss(rss_url)
-    pretext = extract_text_from_html(list_html)
-    return html_parse(pretext)
+    #タイトルとってくる
+    title_lists = extract_title_from_rss()
+    for idxs in idx_lists:
+        uniqueTitle = idx_lists[idxs]
+        #重複していない記事本文をとってくる
+        text = extract_text_from_html(list_html,uniqueTitle)
+        #タイトルを持ってくる
+        title = extract_title_from_rss(title_lists,uniqueTitle)
+        json=get_gpt(text,title)
+        db_create_news(json)
+    
+
+# RSSから日付
+def extract_pub_time() -> list:
+    rss = feedparser.parse(rss_url)
+    date_list = [entry.published_parsed for entry in rss.entries]
+    return date_list
 
 # RSSからタイトルを取得する
 def extract_title_from_rss() -> list:
@@ -27,13 +77,13 @@ def extract_link_from_rss(rss_url) -> list:
     return link_list
 
 # リストのHTMLからテキストを抽出する
-def extract_text_from_html(list_html) -> list:
-    html = list_html[0]
-    print("URL:", html)
+def extract_text_from_html(list_html,uniqueTitle) -> str:
+    html = list_html[uniqueTitle]
+    print("URL:", list)
     response = requests.get(html)
     
     if response.status_code == 200:
-        return response.text
+        return html_parse(response.text)
     else:
         print(f"Error fetching content from {html}, status code: {response.status_code}")
 
@@ -51,8 +101,7 @@ def html_parse(html_link) -> str:
     # テキストを抽出する
     text = article.get_text()
 
-    #  変換されたテキストを出力する
-    print(text)
+    #  変換されたテキストを返す
     return text
 
 #こっからchatGPT
@@ -82,13 +131,10 @@ Notes
 """
 
 
-variable1 = os.environ.get('OPENAI_API_KEY')
-openai.api_key = variable1
-def sample():
-    #タイトルを持ってくる
-    title_list=extract_title_from_rss()
+
+def get_gpt(text,title) -> json:
     #タイトルを和訳させる
-    translated_title=translate_with_gpt(title_list[0])
+    translated_title=translate_with_gpt(title)
     #本文からキーワード抽出，まとめ，要約をさせ，JSON形式で出力させる
     result = chat_with_gpt(text)
     #和訳させたタイトルをJSON形式に成形
@@ -101,20 +147,14 @@ def sample():
     try:
         json_data = json.loads(responses)
         print("This is a valid JSON.")
+        return json_data
     except ValueError:
         print("This is not a valid JSON.")
-    """
-    以下抽出用 使わないかもだけど
-    text = get_summary(responses)
-    keywords = get_keyword(responses)
-    print("text is:"+text)
-    print("keywords is"+keywords)
-    """
 
 def translate_with_gpt(title):
     completion = openai.ChatCompletion.create(
          model="gpt-3.5-turbo",
-        messages=[{"role":"system","content":"You are the AI that good at English and Japanese. "},
+        messages=[{"role":"system","content":"You are the AI that good at English and Japanese. And you are the AI that familiar with information technology."},
                   {"role":"user","content":f"Please translate into Japanese.\n{title}"}
     ])
     response = completion.choices[0].message.content
@@ -135,16 +175,3 @@ def chat_with_gpt(text):
     
     return response
     
-
-"""
-def get_summary(response_pyobj):
-    
-    responses=json.loads(response_pyobj)
-    summary=responses["text"]
-    return summary
-
-def get_keyword(response_pyobj):
-    responses=json.loads(response_pyobj)
-    keywords=responses["keywords"]
-    return keywords
-"""
