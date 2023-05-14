@@ -1,6 +1,9 @@
 from pymongo import MongoClient
 import pymongo
 import asyncio
+
+#関数ここに書いちゃったけどダメだったらservicesのnews.pyにコピペをお願いします
+
 #mongoDBのやつ
 #env
 HOST = 'mongo'
