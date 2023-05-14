@@ -28,7 +28,7 @@ data_1 = {
 my_collection.insert_one(data_1)
 """
 def db_create_title(title):
-    print("タイトル挿入する")
+    print("タイトル挿入する")#デバッグプリント
     db = client["titles"]
     my_collection=db["titles"]
     result = my_collection.find_one({"Atitle":title})
@@ -43,7 +43,7 @@ def db_create_title(title):
         pass
 
 async def db_serch_title(title):
-    print("タイトル確認する")
+    print("タイトル確認する")#デバッグプリント
     #"titles"DBがあるか確認，なければ作成
     db_names = client.list_database_names()
     if "titles" not in db_names:
@@ -65,7 +65,7 @@ def db_title_update_status(title):
 
 
 def db_create_news(news):
-    print("news追加する")
+    print("news追加する")#デバッグプリント
     db = client["news"]
     my_collection=db["data"]
     title = news.get("title")
