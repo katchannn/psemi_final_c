@@ -5,6 +5,10 @@ from routers import news
 app = FastAPI()
 app.include_router(news.router)
 
+@app.get("/")
+async def root():
+    return {"message": "Connection Success"}
+
 async def update_news_periodically():
     # while True:
     #     await update_news()  # update_news関数を実行
