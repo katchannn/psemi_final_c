@@ -26,8 +26,8 @@ rss_url = "https://feeds.feedburner.com/TheHackersNews"
 
 # RSSからニュースを取得する
 async def get_news():
+    #DB接続まち
     await connect_db()
-    json_news = "{test}"
     #タイトルとってくる
     title_lists = extract_title_from_rss()
     #被っていない日時の記事を取るためのidx
@@ -35,9 +35,9 @@ async def get_news():
     idx_lists = []
     print("get_news起動!!") #デバッグプリント
     for title in title_lists:
-        # 日時がDBに登録されているか確認
+        # タイトルがDBに登録されているか,Newsに格納されているか確認
         isCollected = await db_serch_title(title)
-        if isCollected is None:
+        if isCollected is None or isCollected["state"] == "NotStored":
             print("重複チェック終了!!") #デバッグプリント
             db_create_title(title)
             idx_lists.append(idx)
@@ -53,14 +53,15 @@ async def get_news():
         text = extract_text_from_html(list_html,uniqueTitle)
         #タイトルを持ってくる
         title = extract_title(title_lists,uniqueTitle)
+        print("GPTに投げます!!") #デバッグプリント
         json_news = get_gpt(text, title)
         db_create_news(json_news)
+        db_title_update_status(title)#記事を格納したと処理する
         #GPTが1分に3つしか受け付けないので30秒待ちます．
         await asyncio.sleep(30)
     # 1時間ごとに更新
     await asyncio.sleep(3600)
 
-    
 
 # RSSから日付
 def extract_pub_time() -> list:
@@ -85,7 +86,6 @@ def extract_link_from_rss(rss_url) -> list:
 # リストのHTMLからテキストを抽出する
 def extract_text_from_html(list_html,uniqueTitle) -> str:
     html = list_html[uniqueTitle]
-    print("URL:", list)
     response = requests.get(html)
     
     if response.status_code == 200:
@@ -144,6 +144,7 @@ def get_gpt(text,title) -> dict:
     translated_title=translate_with_gpt(title)
     #本文からキーワード抽出，まとめ，要約をさせ，JSON形式で出力させる
     result = chat_with_gpt(text)
+    #GPTのスキーマの最初の{を消す用のやつ．プロンプトから無くすと安定しないため
     result = result[1:]
     
     #和訳させたタイトルをJSON形式に成形
@@ -154,11 +155,19 @@ def get_gpt(text,title) -> dict:
     # 改行を除去する
     result = result.replace('\n', '')
     json_str=json_title+result
-    # 改行を除去する
-    data = json.loads(json_str)
-    
-    print(data)
-    return data
+
+    try:
+        print(json.loads(json_str))
+        return json.loads(json_str)
+    except json.decoder.JSONDecodeError as e:
+        # 文字列内にコンマが足りない場合、次のコンマの位置を探して追加する
+        if e.msg == 'Expecting , delimiter':
+            pos = e.pos
+            s = json_str[:pos] + ',' + json_str[pos:]
+            return json.loads(s)
+        else:
+            # その他のエラーはそのまま例外を投げる
+            raise e
     
 
 def translate_with_gpt(title):

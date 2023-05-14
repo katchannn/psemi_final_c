@@ -32,8 +32,10 @@ def db_create_title(title):
     db = client["titles"]
     my_collection=db["titles"]
     result = my_collection.find_one({"Atitle":title})
+    #Atitleは記事のタイトル,statusはnewsに登録しているか
     data={
-        "Atitle":title
+        "Atitle":title,
+        "state":"NotStored"
     }
     if result is None:
         my_collection.insert_one(data)
@@ -42,7 +44,7 @@ def db_create_title(title):
 
 async def db_serch_title(title):
     print("タイトル確認する")
-    #"title"DBがあるか確認，なければ作成
+    #"titles"DBがあるか確認，なければ作成
     db_names = client.list_database_names()
     if "titles" not in db_names:
         db_create_title(title)
@@ -56,9 +58,14 @@ async def db_serch_title(title):
     else:
         return None
     
+def db_title_update_status(title):
+    db = client["titles"]
+    titles_collection = db["titles"]
+    titles_collection.update_one({"Atitle": title}, {"$set": {"state": "Stored"}})
+
 
 def db_create_news(news):
-    print("news追加するやで")
+    print("news追加する")
     db = client["news"]
     my_collection=db["data"]
     title = news.get("title")
