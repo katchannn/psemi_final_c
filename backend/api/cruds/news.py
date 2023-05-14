@@ -1,5 +1,6 @@
 from pymongo import MongoClient
-
+import pymongo
+import asyncio
 #mongoDBのやつ
 #env
 HOST = 'mongo'
@@ -7,9 +8,14 @@ PORT = 27017
 USERNAME = 'root'
 PASSWORD = 'password'
 
-#connect to mongodb
 DATABASE_URL = f'mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}'
 client = MongoClient(DATABASE_URL)
+
+async def connect_db():
+    #connect to mongodb
+    DATABASE_URL = f'mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}'
+    client = MongoClient(DATABASE_URL)
+    return await asyncio.sleep(1)
 
 """
 db = client["test"]
@@ -21,23 +27,31 @@ data_1 = {
  }
 my_collection.insert_one(data_1)
 """
-def db_create_time(time):
-    print("時間挿入するやで")
-    db = client["time"]
-    my_collection=db["time"]
-
+def db_create_title(title):
+    print("タイトル挿入する")
+    db = client["titles"]
+    my_collection=db["titles"]
+    result = my_collection.find_one({"Atitle":title})
     data={
-        "date":time
+        "Atitle":title
     }
-    my_collection.insert_one(data)
-    my_collection.create_index([("date", pymongo.ASCENDING)], unique=True)
+    if result is None:
+        my_collection.insert_one(data)
+    else:
+        pass
 
-def db_serch_time(time):
-    print("時間確認するで")
-    db = client["time"]
-    my_collection=db["time"]
-    result = my_collection.find_one({"date":time})
-    if result:
+async def db_serch_title(title):
+    print("タイトル確認する")
+    #"title"DBがあるか確認，なければ作成
+    db_names = client.list_database_names()
+    if "titles" not in db_names:
+        db_create_title(title)
+    db = client["titles"]
+    my_collection=db["titles"]
+    #dateがあるか確認，見つかればその値を返す，なければnone
+    result = my_collection.find_one({"Atitle":title})
+    print(result)
+    if result is not None:
         return result
     else:
         return None
@@ -47,5 +61,12 @@ def db_create_news(news):
     print("news追加するやで")
     db = client["news"]
     my_collection=db["data"]
-    data=news
+    title = news.get("title")
+    keywords = news.get("keywords")
+    content = news.get("content")
+    data={
+        "title":f"{title}",
+        "keywords":f"{keywords}",
+        "content":f"{content}"
+    }
     my_collection.insert_one(data)

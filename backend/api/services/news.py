@@ -2,7 +2,10 @@ import feedparser
 import requests
 import openai
 import os
+import bson
+import asyncio
 import json
+import pymongo
 from bs4 import BeautifulSoup
 from cruds.news import *
 
@@ -17,45 +20,46 @@ PORT = 27017
 USERNAME = 'root'
 PASSWORD = 'password'
 
-#connect to mongodb
-DATABASE_URL = f'mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}'
-client = MongoClient(DATABASE_URL)
-
 
 # RSSのURL
 rss_url = "https://feeds.feedburner.com/TheHackersNews"
 
 # RSSからニュースを取得する
-def get_news() -> str:
+async def get_news():
+    await connect_db()
+    json_news = "{test}"
+    #タイトルとってくる
+    title_lists = extract_title_from_rss()
     #被っていない日時の記事を取るためのidx
-    idx=0
-    idx_lists=[]
+    idx = 0
+    idx_lists = []
     print("get_news起動!!") #デバッグプリント
-    #ニュースの公開日をとってくる
-    list_time = extract_pub_time()
-    for time in list_time:
+    for title in title_lists:
         # 日時がDBに登録されているか確認
-        isCollected = db_serch_time(time)
-        if isCollected is not None:
-            print("時間関係起動!!") #デバッグプリント
-            db_create_time(time)
+        isCollected = await db_serch_title(title)
+        if isCollected is None:
+            print("重複チェック終了!!") #デバッグプリント
+            db_create_title(title)
             idx_lists.append(idx)
-            idx+=1
+            idx += 1
         else:
-            idx+=1
+            idx += 1
             continue
     #html持ってくる
     list_html = extract_link_from_rss(rss_url)
-    #タイトルとってくる
-    title_lists = extract_title_from_rss()
-    for idxs in idx_lists:
+    for idxs in range(len(idx_lists)):
         uniqueTitle = idx_lists[idxs]
         #重複していない記事本文をとってくる
         text = extract_text_from_html(list_html,uniqueTitle)
         #タイトルを持ってくる
-        title = extract_title_from_rss(title_lists,uniqueTitle)
-        json=get_gpt(text,title)
-        db_create_news(json)
+        title = extract_title(title_lists,uniqueTitle)
+        json_news = get_gpt(text, title)
+        db_create_news(json_news)
+        #GPTが1分に3つしか受け付けないので30秒待ちます．
+        await asyncio.sleep(30)
+    # 1時間ごとに更新
+    await asyncio.sleep(3600)
+
     
 
 # RSSから日付
@@ -63,7 +67,9 @@ def extract_pub_time() -> list:
     rss = feedparser.parse(rss_url)
     date_list = [entry.published_parsed for entry in rss.entries]
     return date_list
-
+def extract_title(title_lists,uniqueTitle):
+    title = title_lists[uniqueTitle]
+    return title
 # RSSからタイトルを取得する
 def extract_title_from_rss() -> list:
     rss = feedparser.parse(rss_url)
@@ -109,7 +115,7 @@ def html_parse(html_link) -> str:
 prompt= """
 Notes
 ・output must be extracted from the entire article that are important for cybersecurity.
-・output must be following this schema.
+**DO NOT FORGET! output must be following this schema. 
 ・output must be following article.
 ・"keyword" must be in Japanese.
 ・output are read by student that are not familiar with the information technology. so that output should be kindly.
@@ -118,38 +124,42 @@ Notes
 ・"key" must be general knowledge.
 ・Please summarize clealy the entire article when output "content".
 ・"content" must be about 600 words in Japanese.
-{
+
+ {
   "keywords": {
     "keyword 1 from article in 日本語": "description for keyword 1",
     "keyword 2 from article in Japanese"": "description for keyword 2",
     "keyword 3 from article in Japanese": "description for keyword 3"
   },
   "content": "clealy summarized text about the entire article about 600 words in Japanese."
-}
+ }
 
 
 """
 
 
 
-def get_gpt(text,title) -> json:
+def get_gpt(text,title) -> dict:
     #タイトルを和訳させる
     translated_title=translate_with_gpt(title)
     #本文からキーワード抽出，まとめ，要約をさせ，JSON形式で出力させる
     result = chat_with_gpt(text)
+    result = result[1:]
+    
     #和訳させたタイトルをJSON形式に成形
-    json_title=""" {"title" : " """ +f"{translated_title}"+"""", """
+    json_title= """ {"title" : " """ +f"{translated_title}"+"""", """
+    
+
     #タイトルと本文たちを結合しJSONに
-    responses = json.dumps(json_title+result)
-    #確認
-    print(json.loads(responses))
-    #JSONか判別
-    try:
-        json_data = json.loads(responses)
-        print("This is a valid JSON.")
-        return json_data
-    except ValueError:
-        print("This is not a valid JSON.")
+    # 改行を除去する
+    result = result.replace('\n', '')
+    json_str=json_title+result
+    # 改行を除去する
+    data = json.loads(json_str)
+    
+    print(data)
+    return data
+    
 
 def translate_with_gpt(title):
     completion = openai.ChatCompletion.create(

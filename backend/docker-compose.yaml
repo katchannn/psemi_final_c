@@ -11,6 +11,10 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - 8080:8080
+    # tty を設定することで、コンテナ内で標準出力をバッファリングしないようにします。
+    tty: true
+    
+    
 
   mongo:
     image: mongo:latest
@@ -39,6 +43,7 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongo
     depends_on:
       - mongo
+  
 
 # volumes:
 #   mongo:
