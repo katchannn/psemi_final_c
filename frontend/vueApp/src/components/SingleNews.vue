@@ -1,6 +1,8 @@
 <template>
-  <div class="hello">
-    <h1>{{ message }}</h1>
+  <div>
+    <h1>{{ id }}</h1>
+    <h1>{{ title }}</h1>
+    <h1>{{ content }}</h1>
   </div>
 </template>
 
@@ -13,19 +15,23 @@ export default {
     },
     data() {
       return {
-        message : ''
+        id : '',
+        title : '',
+        content : '',
       }
     },
     mounted() {
       //get_hoge()の実行結果を変数messageに渡す
-      this.get_hoge().then((response) =>{
-        this.message = response.data.message
+      this.get_news().then((response) =>{
+        this.id = response.data.id
+        this.title = response.data.title
+        this.content = response.data.content
       })
     },
     methods: {
-      //FastAPI(http://localhost:3000/api/hoge)にgetをリクエスト
-      get_hoge() {
-        return axios.get('/api/test')
+      //FastAPIにgetをリクエスト
+      get_news() {
+        return axios.get('/news/1')
       }
     },
 }
