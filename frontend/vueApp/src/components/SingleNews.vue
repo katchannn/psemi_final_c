@@ -1,8 +1,10 @@
 <template>
   <div>
-    <h1>{{ id }}</h1>
-    <h1>{{ title }}</h1>
-    <h1>{{ content }}</h1>
+    <h1>{{ data.title }}</h1>
+    <div v-for="(value, key) in data.keywords" :key="key">
+      <h1>{{ key }}: {{ value }}</h1>
+    </div>
+    <h1>{{ data.content }}</h1>
   </div>
 </template>
 
@@ -15,17 +17,18 @@ export default {
     },
     data() {
       return {
-        id : '',
-        title : '',
-        content : '',
+        data: {
+          id: null,
+          title: '',
+          keywords: {},
+          content: ''
+        }
       }
     },
     mounted() {
       //get_hoge()の実行結果を変数messageに渡す
       this.get_news().then((response) =>{
-        this.id = response.data.id
-        this.title = response.data.title
-        this.content = response.data.content
+        this.data = response.data
       })
     },
     methods: {
