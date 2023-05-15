@@ -5,7 +5,7 @@ from routers import news
 app = FastAPI()
 app.include_router(news.router)
 
-@app.get("/")
+@app.get("/api/test")
 async def root():
     return {"message": "Connection Success"}
 
