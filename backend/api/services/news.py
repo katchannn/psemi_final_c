@@ -165,6 +165,10 @@ def get_gpt(text,title) -> dict:
             pos = e.pos
             s = json_str[:pos] + ',' + json_str[pos:]
             return json.loads(s)
+        elif e.msg == 'Unterminated string starting at':
+            pos = e.pos
+            s = json_str[:pos] + '"' + json_str[pos:]
+            return json.loads(s)
         else:
             # その他のエラーはそのまま例外を投げる
             raise e
