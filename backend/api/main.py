@@ -1,9 +1,19 @@
 import asyncio
 from fastapi import FastAPI
 from routers import news
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 app.include_router(news.router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
+
 
 @app.get("/api/test")
 async def root():
