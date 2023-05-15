@@ -20,12 +20,13 @@ export default {
       //get_hoge()の実行結果を変数messageに渡す
       this.get_hoge().then((response) =>{
         this.message = response.data.message
+        print(this.message)
       })
     },
     methods: {
       //FastAPI(http://localhost:3000/api/hoge)にgetをリクエスト
       get_hoge() {
-        return axios.get('/')
+        return axios.get('/api/test')
       }
     },
 }
