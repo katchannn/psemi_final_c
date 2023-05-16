@@ -1,18 +1,11 @@
 <template>
-  <NewsDetail />
-  <NewsList />
+  <router-view />
 </template>
 
 <script>
-import NewsDetail from './components/NewsDetail.vue'
-import NewsList from './components/NewsList.vue'
 
 export default {
   name: 'App',
-  components: {
-    NewsDetail,
-    NewsList
-  }
 }
 </script>
 

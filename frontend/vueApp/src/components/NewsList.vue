@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="item in data" :key="item.id" class="card">
+    <div v-for="item in data" :key="item.id" class="card" @click="goToDetails(item.id)">
       <h1>{{ item.title }}</h1>
       <p>{{ item.content }}</p>
       <div v-for="(value, key) in item.keywords" :key="key">
@@ -30,6 +30,9 @@ export default {
     methods: {
       get_hoge() {
         return axios.get('/news')
+      },
+      goToDetails(id) {
+        this.$router.push({ name: 'NewsDetail', params: { id: id } });
       }
     },
 }
@@ -46,5 +49,6 @@ h1 {
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 </style>

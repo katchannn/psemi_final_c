@@ -25,14 +25,15 @@ export default {
         }
       }
     },
-    mounted() {
-      this.get_news().then((response) =>{
+    created() {
+      const id = this.$route.params.id;
+      this.get_details(id).then((response) =>{
         this.data = response.data
       })
     },
     methods: {
-      get_news() {
-        return axios.get('/news/1')
+      get_details(id) {
+      return axios.get(`/news/${id}`) // idに基づいたデータを取得します
       }
     },
 }
