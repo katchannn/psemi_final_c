@@ -13,7 +13,19 @@ async def list_news():
             title="title1",
             keywords={"key1": "value1", "key2": "value2", "key3": "value3"},
             content="content1",
-        )
+        ),
+        news_schema.News(
+            id=2,
+            title="title2",
+            keywords={"key1": "value1", "key2": "value2", "key3": "value3"},
+            content="content2",
+        ),
+        news_schema.News(
+            id=3,
+            title="title3",
+            keywords={"key1": "value1", "key2": "value2", "key3": "value3"},
+            content="content3",
+        ),
     ]
 
 
