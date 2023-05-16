@@ -7,8 +7,12 @@ services:
     volumes:
       - ./api:/api
     build: .
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - 8080:8080
+    # tty を設定することで、コンテナ内で標準出力をバッファリングしないようにします。
+    tty: true
 
   mongo:
     image: mongo:latest

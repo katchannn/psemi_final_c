@@ -12,8 +12,8 @@ client = MongoClient(DATABASE_URL)
 print("Connected to MongoDB")
 
 
-db = client["test"]#testというDBに接続している
-my_collection = db["data"]#DB:testの中にある"data"というテーブルを見ている
+db = client["news"]#newsというDBに接続している
+my_collection = db["data"]#DB:newsの中にある"data"というテーブルを見ている
 
 data_1 = {
     "Name":"test1",
@@ -27,7 +27,15 @@ def db_create_news(news):
     pass
 
 def db_get_news(news_id):
-    #DBからニュースをとってくる
-    print("@@@@@@@@@@@@db_get_news Zone!!!!@@@@@@@@@@@@")
-    getNews = my_collection.find().limit(1)[news_id]
-    print(getNews)#{'_id': ObjectId('645b49673a376b1569de5c14'), 'Name': 'test1', 'Age': 25}という情報を取得できた。
+    #DB:newsのTABLE:dataから指定された行(news_id)をdic型で取得
+    secNews = my_collection.find().limit(1)[news_id]
+
+    #dic型を渡す
+    return secNews
+
+def db_get_newsCount():
+    #DB:newsのTABLE:dataの中にある行の数を数える
+    newsCount = my_collection.count_documents({})
+
+    return newsCount
+    

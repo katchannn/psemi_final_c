@@ -11,7 +11,8 @@ async def update_news_periodically():
     #     await update_news()  # update_news関数を実行
     #     await asyncio.sleep(3600)  # 1時間ごとに更新 
 
-    news_crud.db_get_news(1)#get_newsの確認のため
+    
+    news_crud.db_get_news(0)#get_newsの確認のため
     
     
     
