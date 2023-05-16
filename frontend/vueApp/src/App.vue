@@ -1,14 +1,14 @@
 <template>
-  <SingleNews />
+  <NewsDetail />
 </template>
 
 <script>
-import SingleNews from './components/SingleNews.vue'
+import NewsDetail from './components/NewsDetail.vue'
 
 export default {
   name: 'App',
   components: {
-    SingleNews
+    NewsDetail
   }
 }
 </script>
