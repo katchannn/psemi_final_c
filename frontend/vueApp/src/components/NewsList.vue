@@ -1,6 +1,13 @@
 <template>
-  <div class="hello">
-    <h1>{{ message }}</h1>
+  <div>
+    <div v-for="item in data" :key="item.id">
+      <h1>{{ item.title }}</h1>
+      <p>{{ item.content }}</p>
+      <div v-for="(value, key) in item.keywords" :key="key">
+        {{ key }}: {{ value }}
+      </div>
+      <hr>
+    </div>
   </div>
 </template>
 
@@ -13,19 +20,17 @@ export default {
     },
     data() {
       return {
-        message : ''
+        data: []
       }
     },
     mounted() {
-      //get_hoge()の実行結果を変数messageに渡す
-      this.get_hoge().then((response) =>{
-        this.message = response.data.message
+      this.get_hoge().then((response) => {
+        this.data = response.data;
       })
     },
     methods: {
-      //FastAPI(http://localhost:3000/api/hoge)にgetをリクエスト
       get_hoge() {
-        return axios.get('/api/test')
+        return axios.get('/news')
       }
     },
 }

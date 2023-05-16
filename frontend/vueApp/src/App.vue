@@ -1,14 +1,17 @@
 <template>
   <NewsDetail />
+  <NewsList />
 </template>
 
 <script>
 import NewsDetail from './components/NewsDetail.vue'
+import NewsList from './components/NewsList.vue'
 
 export default {
   name: 'App',
   components: {
-    NewsDetail
+    NewsDetail,
+    NewsList
   }
 }
 </script>
