@@ -26,13 +26,11 @@ export default {
       }
     },
     mounted() {
-      //get_hoge()の実行結果を変数messageに渡す
       this.get_news().then((response) =>{
         this.data = response.data
       })
     },
     methods: {
-      //FastAPIにgetをリクエスト
       get_news() {
         return axios.get('/news/1')
       }
