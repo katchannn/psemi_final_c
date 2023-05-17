@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-for="item in data" :key="item.id" class="card" @click="goToDetails(item.id)">
+      <img :src="imageSrc" alt="画像の説明">
       <h1>{{ item.title }}</h1>
       <p>{{ item.content }}</p>
       <div v-for="(value, key) in item.keywords" :key="key">
@@ -19,6 +20,7 @@ export default {
     },
     data() {
       return {
+        imageSrc: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_ZekiVccFBIrXHIe1c1BBk1Ife1M0o_veVo7RXHR8JBNu40r4_Z4TY7SqSbfHnHIuIWtLrbPd40Dq1Ejdeli9di3E58AWn_em9Ww_KHwe0hI1kSVIJN8Du1OVqHaj1SNGeLTVK6A7qeXG6CommSAEoD7MwHdSlrTpdjfFY7XQKm_4a16ri6_3CHb0/s1600/ms.png',
         data: []
       }
     },
