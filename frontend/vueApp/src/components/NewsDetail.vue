@@ -3,9 +3,9 @@
     <img :src="imageSrc" alt="画像の説明">
     <h1>{{ data.title }}</h1>
     <div v-for="(value, key) in data.keywords" :key="key">
-      <h1>{{ key }}: {{ value }}</h1>
+      <p>{{ key }}: {{ value }}</p>
     </div>
-    <h1>{{ data.content }}</h1>
+    <p>{{ data.content }}</p>
     <router-link to="/" class="btn">Back to Home</router-link>
   </div>
 </template>

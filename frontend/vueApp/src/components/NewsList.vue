@@ -3,7 +3,6 @@
     <div v-for="item in data" :key="item.id" class="card" @click="goToDetails(item.id)">
       <img :src="imageSrc" alt="画像の説明">
       <h1>{{ item.title }}</h1>
-      <p>{{ item.content }}</p>
       <div v-for="(value, key) in item.keywords" :key="key">
         {{ key }}: {{ value }}
       </div>
