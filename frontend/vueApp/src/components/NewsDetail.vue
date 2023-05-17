@@ -6,6 +6,7 @@
       <h1>{{ key }}: {{ value }}</h1>
     </div>
     <h1>{{ data.content }}</h1>
+    <router-link to="/" class="btn">Back to Home</router-link>
   </div>
 </template>
 
