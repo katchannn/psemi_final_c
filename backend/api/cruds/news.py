@@ -67,7 +67,7 @@ def db_title_update_status(title):
     titles_collection.update_one({"Atitle": title}, {"$set": {"state": "Stored"}})
 
 
-def db_create_news(news):
+def db_create_news(news,html,img_URL):
     print("news追加する")#デバッグプリント
     db = client["news"]
     my_collection=db["data"]
@@ -75,6 +75,8 @@ def db_create_news(news):
     keywords = news.get("keywords")
     content = news.get("content")
     data={
+        "html":f"{html}",
+        "img":f"{img_URL}",
         "title":f"{title}",
         "keywords":f"{keywords}",
         "content":f"{content}"

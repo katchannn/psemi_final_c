@@ -6,6 +6,7 @@ import bson
 import asyncio
 import json
 import pymongo
+from re import sub
 from bs4 import BeautifulSoup
 from cruds.news import *
 
@@ -47,6 +48,7 @@ async def get_news():
             continue
     #html持ってくる
     list_html = extract_link_from_rss(rss_url)
+    list_url = extract_enclosure_urls()
     for idxs in range(len(idx_lists)):
         uniqueTitle = idx_lists[idxs]
         #重複していない記事本文をとってくる
@@ -55,7 +57,7 @@ async def get_news():
         title = extract_title(title_lists,uniqueTitle)
         print("GPTに投げます!!") #デバッグプリント
         json_news = get_gpt(text, title)
-        db_create_news(json_news)
+        db_create_news(json_news,list_html[uniqueTitle],list_url[uniqueTitle])
         db_title_update_status(title)#記事を格納したと処理する
         #GPTが1分に3つしか受け付けないので30秒待ちます．
         await asyncio.sleep(30)
@@ -82,6 +84,21 @@ def extract_link_from_rss(rss_url) -> list:
     rss = feedparser.parse(rss_url)
     link_list = [entry.link for entry in rss.entries]
     return link_list
+
+# 画像URL
+def extract_enclosure_urls():
+    feed = feedparser.parse(rss_url)
+    enclosure_urls = []
+
+    for entry in feed.entries:
+        if 'enclosures' in entry:
+            enclosures = entry.enclosures
+            for enclosure in enclosures:
+                if 'url' in enclosure:
+                    enclosure_url = enclosure.url
+                    enclosure_urls.append(enclosure_url)
+
+    return enclosure_urls
 
 # リストのHTMLからテキストを抽出する
 def extract_text_from_html(list_html,uniqueTitle) -> str:
@@ -118,11 +135,12 @@ Notes
 **DO NOT FORGET! output must be following this schema. 
 ・output must be following article.
 ・"keyword" must be in Japanese.
-・output are read by student that are not familiar with the information technology. so that output should be kindly.
-・"keyword" must be extract three And Important Words to understand the article.
-・"keywords" should be extracted for cybersecurity novices in Japanese.
-・"key" must be general knowledge.
+・output are read by student that are not familiar with the information technology. so that output should be so simple and easy.
+・"keyword" must be extract three.
+・"keyword" must be Important Words to understand the article.
+・"keywords" should be extracted for not fimiliar with IT and cybersecurity in Japanese.
 ・Please summarize clealy the entire article when output "content".
+・"keywords" Description must be based IT and cybersecurity knowledge.
 ・"content" must be about 600 words in Japanese.
 
  {
@@ -161,6 +179,8 @@ def get_gpt(text,title) -> dict:
         return json.loads(json_str)
     except json.decoder.JSONDecodeError as e:
         # 文字列内にコンマが足りない場合、次のコンマの位置を探して追加する
+        error_position = e.pos
+        error_char = json_str[error_position]
         if e.msg == 'Expecting , delimiter':
             pos = e.pos
             s = json_str[:pos] + ',' + json_str[pos:]
@@ -169,6 +189,20 @@ def get_gpt(text,title) -> dict:
             pos = e.pos
             s = json_str[:pos] + '"' + json_str[pos:]
             return json.loads(s)
+        elif e.msg == "Extra data":
+            error_position = e.pos
+            # エラー位置より前の部分を取得
+            truncated_json = json_str[:error_position]
+            return json.loads(truncated_json)
+        elif  error_char not in ['"', "'"]:    
+            # 修正したJSON文字列を作成する
+            fixed_json_str = json_str[:error_position] + '"' + json_str[error_position+1:]
+            # ダブルクォートで囲まれた部分を抽出してエスケープ文字を除去する
+            fixed_json_str = sub(r'"([^"\\]*(\\.[^"\\]*)*)"', lambda m: m.group(0).replace('\\', ''), fixed_json_str)
+            return json.loads(fixed_json_str)
+        elif e.msg == "Expecting ':' delimiter":
+            fixed_json_str = json_str[:error_position] + ':' + json_str[error_position:]
+            return json.loads(fixed_json_str)
         else:
             # その他のエラーはそのまま例外を投げる
             raise e
@@ -178,7 +212,7 @@ def translate_with_gpt(title):
     completion = openai.ChatCompletion.create(
          model="gpt-3.5-turbo",
         messages=[{"role":"system","content":"You are the AI that good at English and Japanese. And you are the AI that familiar with information technology."},
-                  {"role":"user","content":f"Please translate into Japanese.\n{title}"}
+                  {"role":"user","content":f"Please translate into Japanese. Use your IT knowledge and cyber security knowledge.\n{title}"}
     ])
     response = completion.choices[0].message.content
     return response
