@@ -15,15 +15,8 @@ print("Connected to MongoDB")
 db = client["news"]#newsというDBに接続している
 my_collection = db["data"]#DB:newsの中にある"data"というテーブルを見ている
 
-data_1 = {
-    "Name":"test1",
-    "Age":25,
-}
-#my_collection.insert_one(data_1)
 
 def db_create_news(news):
-
-    
     pass
 
 def db_get_news(news_id):

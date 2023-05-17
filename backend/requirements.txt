@@ -4,4 +4,3 @@ feedparser
 requests
 BeautifulSoup4
 pymongo
-bson
