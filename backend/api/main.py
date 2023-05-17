@@ -8,22 +8,19 @@ app.include_router(news.router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*']
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-
-@app.get("/api/test")
-async def root():
-    return {"message": "Connection Success"}
 
 async def update_news_periodically():
     # while True:
     #     await update_news()  # update_news関数を実行
     #     await asyncio.sleep(3600)  # 1時間ごとに更新
     pass
+
 
 @app.on_event("startup")
 async def on_startup():
