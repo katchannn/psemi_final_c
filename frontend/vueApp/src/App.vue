@@ -1,15 +1,19 @@
 <template>
   <v-app>
     <v-main>
-      <router-view />
+      <ThreeColum />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import ThreeColum from './components/three-column.vue'
 
 export default {
   name: 'App',
+  components: {
+    ThreeColum
+  },
 }
 </script>
 

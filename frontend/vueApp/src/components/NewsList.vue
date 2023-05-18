@@ -1,42 +1,48 @@
 <template>
   <div>
-    <div v-for="item in data" :key="item.id" class="card" @click="goToDetails(item.id)">
-      <img :src="imageSrc" alt="画像の説明">
-      <h1>{{ item.title }}</h1>
-      <div v-for="(value, key) in item.keywords" :key="key">
-        {{ key }}: {{ value }}
+    <v-card>
+      <div
+        v-for="item in data"
+        :key="item.id"
+        class="card"
+        @click="goToDetails(item.id)"
+      >
+        <img :src="imageSrc" alt="画像の説明" />
+        <h1>{{ item.title }}</h1>
+        <div v-for="(value, key) in item.keywords" :key="key">
+          {{ key }}: {{ value }}
+        </div>
       </div>
-    </div>
+    </v-card>
   </div>
 </template>
 
 <script>
-
-import { axios } from '/app/plugins/axios'
+import { axios } from "/app/plugins/axios";
 
 export default {
-    components: {
+  components: {},
+  data() {
+    return {
+      imageSrc:
+        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_ZekiVccFBIrXHIe1c1BBk1Ife1M0o_veVo7RXHR8JBNu40r4_Z4TY7SqSbfHnHIuIWtLrbPd40Dq1Ejdeli9di3E58AWn_em9Ww_KHwe0hI1kSVIJN8Du1OVqHaj1SNGeLTVK6A7qeXG6CommSAEoD7MwHdSlrTpdjfFY7XQKm_4a16ri6_3CHb0/s1600/ms.png",
+      data: [],
+    };
+  },
+  mounted() {
+    this.get_hoge().then((response) => {
+      this.data = response.data;
+    });
+  },
+  methods: {
+    get_hoge() {
+      return axios.get("/news");
     },
-    data() {
-      return {
-        imageSrc: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_ZekiVccFBIrXHIe1c1BBk1Ife1M0o_veVo7RXHR8JBNu40r4_Z4TY7SqSbfHnHIuIWtLrbPd40Dq1Ejdeli9di3E58AWn_em9Ww_KHwe0hI1kSVIJN8Du1OVqHaj1SNGeLTVK6A7qeXG6CommSAEoD7MwHdSlrTpdjfFY7XQKm_4a16ri6_3CHb0/s1600/ms.png',
-        data: []
-      }
+    goToDetails(id) {
+      this.$router.push({ name: "NewsDetail", params: { id: id } });
     },
-    mounted() {
-      this.get_hoge().then((response) => {
-        this.data = response.data;
-      })
-    },
-    methods: {
-      get_hoge() {
-        return axios.get('/news')
-      },
-      goToDetails(id) {
-        this.$router.push({ name: 'NewsDetail', params: { id: id } });
-      }
-    },
-}
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

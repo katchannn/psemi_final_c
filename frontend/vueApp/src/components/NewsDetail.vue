@@ -6,7 +6,8 @@
       <p>{{ key }}: {{ value }}</p>
     </div>
     <p>{{ data.content }}</p>
-    <router-link to="/" class="btn">Back to Home</router-link>
+    <v-btn to="/" color="primary" class="btn" tile>Back to Home</v-btn>
+
   </div>
 </template>
 
