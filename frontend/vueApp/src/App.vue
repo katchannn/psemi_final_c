@@ -1,16 +1,19 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to my Vue.js App"/>
+  <v-app>
+    <v-main>
+      <ThreeColum />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ThreeColum from './components/three-column.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    ThreeColum
+  },
 }
 </script>
 
