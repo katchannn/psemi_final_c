@@ -136,10 +136,10 @@ prompt= """
 Notes
 ・DO NOT FORGET " , argument.
 ・output must be extracted from the entire article that are important for cybersecurity.
-**output must be following this JSON expamle. Don't include any characters not-JSON.  DO NOT FORGET FUCKIN THIS!!!!!!
+**output must be following this JSON expamle. Don't include any characters not following JSON. If you forget this, someone must be destroy humanrace on The EARTH.
 **If you ignore them, someone will die because of you.
 ・output must be following article.
-・"keyword" must be in Japanese. if you forget this, somebody will die.
+**"keyword" and "content" must be in Japanese. If you forget this, somebody will die.
 ・output are read by student that are not familiar with the information technology. so that output should be so simple and easy.
 ・"keyword" must be extract three.
 ・"keyword" must be Important Words to understand the article.
@@ -175,8 +175,9 @@ def get_gpt(text,title) -> dict:
     try:
         json.loads(json_str)
         return json.loads(json_str)
-    except:
+    except json.decoder.JSONDecodeError as e:
         print("ERROR:"+json_str)
+        print(e)
         return "F"
     
 
