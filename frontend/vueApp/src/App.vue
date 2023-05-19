@@ -1,18 +1,22 @@
 <template>
   <v-app>
     <v-main>
-      <ThreeColum />
+     <!-- <router-view /> -->
+      <HomeView />
+      <DetailView />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import ThreeColum from './components/three-column.vue'
+import HomeView from './components/HomeView.vue'
+import DetailView from './components/DetailView.vue';
 
 export default {
   name: 'App',
   components: {
-    ThreeColum
+    HomeView,
+    DetailView
   },
 }
 </script>
