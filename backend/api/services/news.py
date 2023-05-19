@@ -57,6 +57,9 @@ async def get_news():
         title = extract_title(title_lists,uniqueTitle)
         print("GPTに投げます!!") #デバッグプリント
         json_news = get_gpt(text, title)
+        print(json_news)
+        if json_news == "F":
+            continue
         db_create_news(json_news,list_html[uniqueTitle],list_url[uniqueTitle])
         db_title_update_status(title)#記事を格納したと処理する
         #GPTが1分に3つしか受け付けないので30秒待ちます．
@@ -131,10 +134,12 @@ def html_parse(html_link) -> str:
 
 prompt= """
 Notes
+・DO NOT FORGET " , argument.
 ・output must be extracted from the entire article that are important for cybersecurity.
-**DO NOT FORGET! output must be following this schema. 
+**output must be following this JSON expamle. Don't include any characters not-JSON.  DO NOT FORGET FUCKIN THIS!!!!!!
+**If you ignore them, someone will die because of you.
 ・output must be following article.
-・"keyword" must be in Japanese.
+・"keyword" must be in Japanese. if you forget this, somebody will die.
 ・output are read by student that are not familiar with the information technology. so that output should be so simple and easy.
 ・"keyword" must be extract three.
 ・"keyword" must be Important Words to understand the article.
@@ -143,14 +148,8 @@ Notes
 ・"keywords" Description must be based IT and cybersecurity knowledge.
 ・"content" must be about 600 words in Japanese.
 
- {
-  "keywords": {
-    "keyword 1 from article in 日本語": "description for keyword 1",
-    "keyword 2 from article in Japanese"": "description for keyword 2",
-    "keyword 3 from article in Japanese": "description for keyword 3"
-  },
-  "content": "clealy summarized text about the entire article about 600 words in Japanese."
- }
+
+ {"keywords": {"keyword 1 from article in 日本語": "description for keyword 1","keyword 2 from article in Japanese"": "description for keyword 2","keyword 3 from article in Japanese": "description for keyword 3"},"content": "clealy summarized text about the entire article about 600 words in Japanese."}
 
 
 """
@@ -173,7 +172,16 @@ def get_gpt(text,title) -> dict:
     # 改行を除去する
     result = result.replace('\n', '')
     json_str=json_title+result
+    try:
+        json.loads(json_str)
+        return json.loads(json_str)
+    except:
+        print("ERROR:"+json_str)
+        return "F"
+    
 
+    
+def error_json(json_str):
     try:
         print(json.loads(json_str))
         return json.loads(json_str)
@@ -206,13 +214,12 @@ def get_gpt(text,title) -> dict:
         else:
             # その他のエラーはそのまま例外を投げる
             raise e
-    
 
 def translate_with_gpt(title):
     completion = openai.ChatCompletion.create(
          model="gpt-3.5-turbo",
         messages=[{"role":"system","content":"You are the AI that good at English and Japanese. And you are the AI that familiar with information technology."},
-                  {"role":"user","content":f"Please translate into Japanese. Use your IT knowledge and cyber security knowledge.\n{title}"}
+                  {"role":"user","content":f"Please translate into Japanese. Use your IT knowledge and cyber security knowledge. DO NOT output your comment.output ONLY translated title.\n{title}"}
     ])
     response = completion.choices[0].message.content
     return response
@@ -223,7 +230,7 @@ def chat_with_gpt(text):
         model="gpt-3.5-turbo",
         messages=[{"role":"system","content":"You are the AI that good at cybersecurity,English and Japanese. And you are an AI that excels at text summarizing. "},
                   {"role":"system","content":"You are also familiar with the information technology."},
-                  {"role":"user","content":"Please read this article. when you have read article, please output this schema. Please follow Notes."
+                  {"role":"user","content":"Please read this article. when you have read article, please output this schema.\n Please follow Notes. If you ignore them, someone will die."
                    +f"\narticle:{text}\n"+prompt
 }]
     )
