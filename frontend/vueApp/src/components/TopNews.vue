@@ -2,7 +2,7 @@
     <div>
       <v-card>
         <div
-          v-for="item in data"
+          v-for="item in data.slice(0, 3)"
           :key="item.id"
           class="card"
           @click="handleClick(item.id)"
