@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import NewsDetail from '../src/components/NewsDetail.vue'
-import NewsList from '../src/components/NewsList.vue'
+import HomeView from '../src/components/HomeView.vue'
+import DetailView from '../src/components/DetailView.vue'
 
 
 const router = createRouter({
@@ -8,13 +8,13 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'NewsList',
-            component: NewsList
+            component: HomeView
           },
           {
-            path: '/details/:id', // idパラメータを持つdetailsルートを設定します
-            name: 'NewsDetail',
-            component: NewsDetail
+            path: '/details/:id', 
+            name: 'Detail',
+            component: DetailView,
+            props: true
           }
     ],
   });

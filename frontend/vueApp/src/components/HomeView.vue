@@ -1,6 +1,9 @@
 <template>
-  <TopNews />
-  <ListNews />
+  <TopNews @news-clicked="navigateToDetail"/>
+  ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー<br>
+  ーーーーーーーーーーーーーーーーーーーーーーーーーーーここからリストーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー<br>
+  ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+  <ListNews @news-clicked="navigateToDetail"/>
 </template>
 
 <script>
@@ -12,5 +15,10 @@ export default {
     TopNews,
     ListNews,
   },
+  methods: {
+    navigateToDetail(newsId) {
+      this.$router.push({ name: 'Detail', params: { id: newsId } });
+    }
+  }
 };
 </script>

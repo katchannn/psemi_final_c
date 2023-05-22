@@ -1,5 +1,5 @@
 <template>
-  <DetailNews />
+  <DetailNews :news-id="id"/>
 </template>
 
 <script>
@@ -9,5 +9,8 @@ export default {
   components: {
     DetailNews,
   },
+  props: {
+    id: String
+  }
 };
 </script>

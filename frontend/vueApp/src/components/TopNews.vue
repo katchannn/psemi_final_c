@@ -5,7 +5,7 @@
           v-for="item in data"
           :key="item.id"
           class="card"
-          @click="goToDetails(item.id)"
+          @click="handleClick(item.id)"
         >
           <img :src="imageSrc" alt="画像の説明" />
           <h1>{{ item.title }}</h1>
@@ -38,8 +38,8 @@
       get_hoge() {
         return axios.get("/news");
       },
-      goToDetails(id) {
-        this.$router.push({ name: "NewsDetail", params: { id: id } });
+      handleClick(id) {
+        this.$emit('news-clicked', id);
       },
     },
   };

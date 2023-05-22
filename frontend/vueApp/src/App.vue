@@ -1,22 +1,22 @@
 <template>
   <v-app>
     <v-main>
-     <!-- <router-view /> -->
-      <HomeView />
-      <DetailView />
+     <router-view />
+      <!-- <HomeView />
+      <DetailView /> -->
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HomeView from './components/HomeView.vue'
-import DetailView from './components/DetailView.vue';
+// import HomeView from './components/HomeView.vue'
+// import DetailView from './components/DetailView.vue';
 
 export default {
   name: 'App',
   components: {
-    HomeView,
-    DetailView
+    // HomeView,
+    // DetailView
   },
 }
 </script>
