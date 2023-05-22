@@ -51,7 +51,6 @@ h1 {
   color: #42b983;
 }
 .card {
-  background-color: #ddd;
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 20px;
