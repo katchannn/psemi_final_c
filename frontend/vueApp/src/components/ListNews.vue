@@ -1,20 +1,59 @@
+<!-- <template>
+  <v-card
+    v-for="item in data"
+    :key="item.id"
+    class="card mx-auto"
+    max-width="600"
+    @click="handleClick(item.id)"
+  >
+    <v-img class="align-end text-white" height="300" :src="imageSrc" cover>
+    </v-img>
+
+    <v-card-title>
+      {{ item.title }}
+    </v-card-title>
+
+    <v-card-actions>
+      <v-chip v-for="(value, key) in item.keywords" :key="key" color="orange">
+        {{ key }}
+      </v-chip>
+    </v-card-actions>
+  </v-card>
+</template> -->
+
 <template>
-  <div>
-    <v-card>
-      <div
+  <v-container>
+    <v-row>
+      <v-col
         v-for="item in data"
         :key="item.id"
-        class="card"
-        @click="handleClick(item.id)"
+        cols="12"
+        sm="6"
+        md="6"
+        lg="4"
+        class="mb-4"
       >
-        <img :src="imageSrc" alt="画像の説明" />
-        <h1>{{ item.title }}</h1>
-        <div v-for="(value, key) in item.keywords" :key="key">
-          {{ key }}: {{ value }}
-        </div>
-      </div>
-    </v-card>
-  </div>
+        <v-card
+          class="mx-auto d-flex flex-column"
+          max-width="90%"
+          height="100%"
+          @click="handleClick(item.id)"
+        >
+          <v-img class="align-end text-white" height="300" :src="imageSrc" cover></v-img>
+
+          <v-card-text style="text-align: left;">
+            <h3>{{ item.title }}</h3>
+          </v-card-text>
+
+          <v-card-actions class="mt-auto">
+            <v-chip v-for="(value, key) in item.keywords" :key="key" color="orange">
+              {{ key }}
+            </v-chip>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -39,22 +78,8 @@ export default {
       return axios.get("/news");
     },
     handleClick(id) {
-      this.$emit('news-clicked', id);
+      this.$emit("news-clicked", id);
     },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1 {
-  color: #42b983;
-}
-.card {
-  border-radius: 5px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-}
-</style>
