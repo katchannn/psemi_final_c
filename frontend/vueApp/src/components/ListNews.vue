@@ -1,28 +1,8 @@
-<!-- <template>
-  <v-card
-    v-for="item in data"
-    :key="item.id"
-    class="card mx-auto"
-    max-width="600"
-    @click="handleClick(item.id)"
-  >
-    <v-img class="align-end text-white" height="300" :src="imageSrc" cover>
-    </v-img>
-
-    <v-card-title>
-      {{ item.title }}
-    </v-card-title>
-
-    <v-card-actions>
-      <v-chip v-for="(value, key) in item.keywords" :key="key" color="orange">
-        {{ key }}
-      </v-chip>
-    </v-card-actions>
-  </v-card>
-</template> -->
-
 <template>
   <v-container style="padding: 0 10%">
+    <div style="text-align: left; margin: 3% 0 3% 3%">
+      <h1>News</h1>
+    </div>
     <v-row>
       <v-col
         v-for="item in data"
@@ -39,14 +19,23 @@
           height="100%"
           @click="handleClick(item.id)"
         >
-          <v-img class="align-end text-white" height="300" :src="imageSrc" cover></v-img>
+          <v-img
+            class="align-end text-white"
+            height="300"
+            :src="imageSrc"
+            cover
+          ></v-img>
 
-          <v-card-text style="text-align: left;">
+          <v-card-text style="text-align: left">
             <h3>{{ item.title }}</h3>
           </v-card-text>
 
           <v-card-actions class="mt-auto">
-            <v-chip v-for="(value, key) in item.keywords" :key="key" color="orange">
+            <v-chip
+              v-for="(value, key) in item.keywords"
+              :key="key"
+              color="orange"
+            >
               {{ key }}
             </v-chip>
           </v-card-actions>
