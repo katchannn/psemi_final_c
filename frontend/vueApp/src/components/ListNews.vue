@@ -22,15 +22,15 @@
 </template> -->
 
 <template>
-  <v-container>
+  <v-container style="padding: 0 10%">
     <v-row>
       <v-col
         v-for="item in data"
         :key="item.id"
         cols="12"
-        sm="6"
+        sm="12"
         md="6"
-        lg="4"
+        lg="6"
         class="mb-4"
       >
         <v-card
