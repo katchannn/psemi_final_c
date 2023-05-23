@@ -13,6 +13,8 @@ PASSWORD = 'password'
 
 DATABASE_URL = f'mongodb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}'
 client = MongoClient(DATABASE_URL)
+db = client["news"]
+my_collection=db["data"]
 
 async def connect_db():
     #connect to mongodb

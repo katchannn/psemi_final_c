@@ -73,10 +73,16 @@ async def detail_news(news_id:str):
     str_newsKeywords = secNews.get("keywords")
     dic_keywords = eval(str_newsKeywords)
     
+    #imgsrc,htmlsrcはどちらも文字列(?)
+    newsImgSrc= secNews.get("img")
+    newsHtmlSrc=secNews.get("html")
 
+    
 
     return news_schema.News(
         id=strNewsId,
+        html=newsHtmlSrc,
+        img=newsImgSrc,
         title=newsTitle,
         keywords=dic_keywords,
         content=newsContent,
@@ -87,6 +93,8 @@ async def detail_news(news_id:str):
 async def test_news():
     return news_schema.News(
         id="1",
+        htmlsrc="htmlsrc1",
+        imgsrc="img1",
         title="title1",
         keywords={"key1": "value1", "key2": "value2", "key3": "value3"},
         content="content1",
