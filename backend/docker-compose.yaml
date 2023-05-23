@@ -7,6 +7,10 @@ services:
     volumes:
       - ./api:/api
     build: .
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - 8000:8000
 
@@ -37,6 +41,7 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongo
     depends_on:
       - mongo
+  
 
 # volumes:
 #   mongo:
