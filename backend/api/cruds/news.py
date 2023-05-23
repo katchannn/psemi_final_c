@@ -82,3 +82,17 @@ def db_create_news(news,html,img_URL):
         "content":f"{content}"
     }
     my_collection.insert_one(data)
+
+def db_get_news(news_id):
+    #DB:newsのTABLE:dataから指定された行(news_id)をdic型で取得
+    secNews = my_collection.find().limit(1)[news_id]
+
+    #dic型を渡す
+    return secNews
+
+def db_get_newsCount():
+    #DB:newsのTABLE:dataの中にある行の数を数える
+    newsCount = my_collection.count_documents({})
+
+    return newsCount
+    

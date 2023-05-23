@@ -2,6 +2,7 @@ import asyncio
 from fastapi import FastAPI
 from services.news import get_news
 from routers import news
+from cruds import news as news_crud
 
 app = FastAPI()
 app.include_router(news.router)
