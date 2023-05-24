@@ -1,6 +1,8 @@
 import asyncio
 from fastapi import FastAPI
+from services.news import get_news
 from routers import news
+from cruds import news as news_crud
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -16,12 +18,14 @@ app.add_middleware(
 
 
 async def update_news_periodically():
-    # while True:
-    #     await update_news()  # update_news関数を実行
-    #     await asyncio.sleep(3600)  # 1時間ごとに更新
-    pass
+    print("起動")#デバッグプリント
+    while True:
+        print("get_newsを開始")
+        await get_news()  # get_news関数を実行
+
 
 
 @app.on_event("startup")
 async def on_startup():
+    print("初回起動")#デバッグプリント
     asyncio.create_task(update_news_periodically())
