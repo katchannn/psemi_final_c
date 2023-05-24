@@ -22,7 +22,7 @@
           <v-img
             class="align-end text-white"
             height="300"
-            :src="imageSrc"
+            :src="item.img"
             cover
           ></v-img>
 
@@ -54,8 +54,6 @@ export default {
   components: {},
   data() {
     return {
-      imageSrc:
-        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_ZekiVccFBIrXHIe1c1BBk1Ife1M0o_veVo7RXHR8JBNu40r4_Z4TY7SqSbfHnHIuIWtLrbPd40Dq1Ejdeli9di3E58AWn_em9Ww_KHwe0hI1kSVIJN8Du1OVqHaj1SNGeLTVK6A7qeXG6CommSAEoD7MwHdSlrTpdjfFY7XQKm_4a16ri6_3CHb0/s1600/ms.png",
       data: [],
     };
   },
