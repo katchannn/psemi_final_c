@@ -15,7 +15,7 @@
       
       <p style="font-size: 1.2em; color: #333; line-height: 1.5; margin-top: 5%; text-align: left;">{{ data.content }}</p>
     </div>
-
+    <v-btn color="primary" @click="openExternalLink(data.html)">GO news resource</v-btn>
     <v-btn
         class="ma-2"
         color="primary"
@@ -56,13 +56,20 @@ export default {
     });
   },
   methods: {
+    openExternalLink(url) {
+      window.open(url);
+    },
     get_details(id) {
       return axios.get(`/news/${id}`); // idに基づいたデータを取得します
     },
     scrollToTop() {
-      window.scrollTo(0, 0);
-    },
-  },
+    window.scroll({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+  }
+  }
 };
 </script>
 
