@@ -29,9 +29,14 @@ async def list_news():
         #キーワードは長い文字列のstring型→辞書型
         str_newsKeywords = secNews.get("keywords")
         dic_keywords = eval(str_newsKeywords)
-    
+        #imgsrc,htmlsrcはどちらも文字列(?)
+        newsImgSrc = secNews.get("img")
+        newsHtmlSrc = secNews.get("html")
+
         result.append(news_schema.News(
                 id=strNewsId,
+                html=newsHtmlSrc,
+                img=newsImgSrc,
                 title=newsTitle,
                 keywords=dic_keywords,
                 content=newsContent,
@@ -74,8 +79,8 @@ async def detail_news(news_id:str):
     dic_keywords = eval(str_newsKeywords)
     
     #imgsrc,htmlsrcはどちらも文字列(?)
-    newsImgSrc= secNews.get("img")
-    newsHtmlSrc=secNews.get("html")
+    newsImgSrc = secNews.get("img")
+    newsHtmlSrc = secNews.get("html")
 
     
 
@@ -93,8 +98,8 @@ async def detail_news(news_id:str):
 async def test_news():
     return news_schema.News(
         id="1",
-        htmlsrc="htmlsrc1",
-        imgsrc="img1",
+        html="htmlsrc1",
+        img="img1",
         title="title1",
         keywords={"key1": "value1", "key2": "value2", "key3": "value3"},
         content="content1",
