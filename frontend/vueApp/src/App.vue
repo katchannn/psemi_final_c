@@ -1,36 +1,22 @@
 <template>
   <v-app>
     <v-main>
-      <v-app-bar color="primary" @click="goHome" style="cursor: pointer">
-        <v-toolbar-title>
-          <!-- <v-avatar>
-            <img src="/isl_icon.png" width="40" height="45" />
-          </v-avatar> -->
-          <span class="ml-3 title font-weight-light">Security</span>
-          <span class="title font-weight-bold">News Aggregator</span>
-        </v-toolbar-title>
-      </v-app-bar>
+      <header-view />
       <router-view />
-      <v-footer
-      color="primary"
-    class="text-center d-flex flex-column"
-  >
-
-    <div>
-      <v-avatar><img src="/isl_icon.png" width="40" height="45" /></v-avatar>
-    </div>
-  </v-footer>
+      <footer-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import HeaderView from '../src/components/HeaderView.vue';
+import FooterView from '../src/components/FooterView.vue';
+
 export default {
   name: "App",
-  methods: {
-    goHome() {
-      this.$router.push("/");
-    },
+  components: {
+    HeaderView,
+    FooterView
   },
 };
 </script>
