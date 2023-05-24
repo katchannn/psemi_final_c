@@ -1,7 +1,7 @@
 <template>
   <div style="max-width: 800px; margin: auto; padding: 20px; box-shadow: 0px 5px 15px rgba(0,0,0,0.1); border-radius: 10px; position: relative;">
     
-    <v-btn to="/" color="primary" class="btn" tile style="position: absolute; top: 20px; left: 20px;"> <v-icon>mdi-close-thick</v-icon></v-btn>
+    <v-btn to="/" color="red" class="btn" tile style="position: absolute; top: 20px; left: 20px;"> <v-icon>mdi-close-thick</v-icon></v-btn>
     
     <img :src="data.img" alt="画像の説明" style="width: 100%; height: auto; border-radius: 10px 10px 0 0;" />
     
@@ -16,7 +16,12 @@
       <p style="font-size: 1.2em; color: #333; line-height: 1.5; margin-top: 5%; text-align: left;">{{ data.content }}</p>
     </div>
 
-    <v-btn color="blue-darken-4">The Hacker News</v-btn>
+    <v-btn
+        class="ma-2"
+        color="primary"
+        icon="mdi-transfer-up"
+        @click="scrollToTop"
+      ></v-btn>
   </div>
 </template>
 
@@ -53,6 +58,9 @@ export default {
   methods: {
     get_details(id) {
       return axios.get(`/news/${id}`); // idに基づいたデータを取得します
+    },
+    scrollToTop() {
+      window.scrollTo(0, 0);
     },
   },
 };
