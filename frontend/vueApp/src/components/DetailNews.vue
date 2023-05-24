@@ -1,7 +1,7 @@
 <template>
   <div style="max-width: 800px; margin: auto; padding: 20px; box-shadow: 0px 5px 15px rgba(0,0,0,0.1); border-radius: 10px; position: relative;">
     
-    <v-btn to="/" color="primary" class="btn" tile style="position: absolute; top: 20px; left: 20px;">X</v-btn>
+    <v-btn to="/" color="primary" class="btn" tile style="position: absolute; top: 20px; left: 20px;"> <v-icon>mdi-close-thick</v-icon></v-btn>
     
     <img :src="data.img" alt="画像の説明" style="width: 100%; height: auto; border-radius: 10px 10px 0 0;" />
     
