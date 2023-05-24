@@ -3,14 +3,23 @@
     <v-main>
       <v-app-bar color="primary" @click="goHome" style="cursor: pointer">
         <v-toolbar-title>
-          <v-avatar>
+          <!-- <v-avatar>
             <img src="/isl_icon.png" width="40" height="45" />
-          </v-avatar>
+          </v-avatar> -->
           <span class="ml-3 title font-weight-light">Security</span>
           <span class="title font-weight-bold">News Aggregator</span>
         </v-toolbar-title>
       </v-app-bar>
       <router-view />
+      <v-footer
+      color="primary"
+    class="text-center d-flex flex-column"
+  >
+
+    <div>
+      <v-avatar><img src="/isl_icon.png" width="40" height="45" /></v-avatar>
+    </div>
+  </v-footer>
     </v-main>
   </v-app>
 </template>
