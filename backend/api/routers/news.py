@@ -41,9 +41,9 @@ async def list_news():
                 keywords=dic_keywords,
                 content=newsContent,
         ))
-    
+   
     return result
-
+  
 
 @router.get("/news/{news_id}", response_model=news_schema.News)
 

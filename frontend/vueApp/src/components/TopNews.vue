@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-card class="mx-auto" max-width="500">
     <v-container fluid>
       <v-row dense>
@@ -67,6 +67,37 @@
       </v-row>
     </v-container>
   </v-card>
+</template> -->
+
+<template>
+  <v-carousel show-arrows="hover" cycle hide-delimiter-background>
+    <v-carousel-item
+      v-for="item in data.slice(0, 3)"
+      :key="item.id"
+      @click="handleClick(item.id)"
+      cover
+    >
+      <v-img
+        :src="imageSrc"
+        class="align-end"
+        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+        height="100%"
+        cover
+      >
+        <v-card
+          class="d-flex flex-column"
+          color="transparent"
+          flat
+          height="100%"
+        >
+          <v-spacer />
+          <v-card-title class="mb-12 text-white">
+            {{ item.title }}
+          </v-card-title>
+        </v-card>
+      </v-img>
+    </v-carousel-item>
+  </v-carousel>
 </template>
 
 <script>
