@@ -35,6 +35,8 @@
               v-for="(value, key) in item.keywords"
               :key="key"
               color="orange"
+            
+              
             >
               {{ key }}
             </v-chip>
