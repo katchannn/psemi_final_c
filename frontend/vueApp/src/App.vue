@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <v-app-bar color="primary">
+      <v-app-bar color="primary" @click="goHome" style="cursor: pointer;">
     <v-toolbar-title class="headline text-uppercase">
       <span class="font-weight-light">SECURITY</span>
       <span class="font-weight-bold">NEWS AGGREGATOR</span>
@@ -25,6 +25,11 @@
 <script>
 export default {
   name: 'App',
+  methods: {
+    goHome() {
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 
