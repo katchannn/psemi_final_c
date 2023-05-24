@@ -15,6 +15,8 @@
       
       <p style="font-size: 1.2em; color: #333; line-height: 1.5; margin-top: 5%; text-align: left;">{{ data.content }}</p>
     </div>
+
+    <v-btn color="blue-darken-4">The Hacker News</v-btn>
   </div>
 </template>
 
