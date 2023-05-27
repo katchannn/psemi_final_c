@@ -86,14 +86,14 @@ def news_serializer(news) -> dict:
     } 
     
 
-def db_get_news(news_id) -> dict:
+async def db_get_news(news_id) -> dict:
     news = my_collection.find_one({"_id":ObjectId(news_id)})
     news = news_serializer(news)
     
     return news
 
     
-def db_get_newsList() -> list:
+async def db_get_newsList() -> list:
     newsDoc = my_collection.find().sort("_id",pymongo.DESCENDING)
     newsList = [news_serializer(news) for news in newsDoc]
     
