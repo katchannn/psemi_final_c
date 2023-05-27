@@ -2,14 +2,14 @@ from fastapi import APIRouter
 from typing import List
 import schemas.news as news_schema
 from cruds import news as news_crud
+from cachetools import cached, TTLCache
 
 
 router = APIRouter()
+cache = TTLCache(maxsize=100, ttl=3600) 
 
-
-@router.get("/news", response_model=List[news_schema.News])
-async def list_news():
-
+@cached(cache)
+def fetch_news():
     result= []
 
     for i in range(news_crud.db_get_newsCount()):
@@ -43,10 +43,15 @@ async def list_news():
         ))
    
     return result
+    
+
+
+@router.get("/news", response_model=List[news_schema.News])
+async def list_news():
+    return fetch_news()
   
 
 @router.get("/news/{news_id}", response_model=news_schema.News)
-
 async def detail_news(news_id:str):
 
     secNews = {}#詳細を表示したいニュースの辞書型
