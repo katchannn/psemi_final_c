@@ -75,12 +75,13 @@ def db_create_news(news,html,img_URL):
     my_collection=db["data"]
     title = news.get("title")
     keywords = news.get("keywords")
+    print(type(keywords))
     content = news.get("content")
     data={
         "html":f"{html}",
         "img":f"{img_URL}",
         "title":f"{title}",
-        "keywords":f"{keywords}",
+        "keywords":keywords,
         "content":f"{content}"
     }
     my_collection.insert_one(data)
@@ -97,4 +98,8 @@ def db_get_newsCount():
     newsCount = my_collection.count_documents({})
 
     return newsCount
-    
+
+def db_get_newslist():
+    newslist=my_collection.find().sort()
+    newsdoc = [news for news in newslist]
+    return newsdoc
