@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from typing import List
 import schemas.news as news_schema
-from cruds import news as news_crud
+from cruds import db_get_newslist
 
 
 router = APIRouter()
@@ -9,40 +9,9 @@ router = APIRouter()
 
 @router.get("/news", response_model=List[news_schema.News])
 async def list_news():
+    return db_get_newslist()
 
-    result= []
-
-    for i in range(news_crud.db_get_newsCount()):
-
-        #辞書型で格納されているid,title,keywords,contentを持ってくる
-        secNews = news_crud.db_get_news(i)
-
-
-        #idはbson.ObjectId型→string型
-        newsId = secNews.get("_id")
-        strNewsId = str(newsId)
-
-        #タイトルと概要は普通に指定して取る
-        newsTitle = secNews.get("title")
-        newsContent = secNews.get("content")
-
-        #キーワードは長い文字列のstring型→辞書型
-        str_newsKeywords = secNews.get("keywords")
-        dic_keywords = eval(str_newsKeywords)
-        #imgsrc,htmlsrcはどちらも文字列(?)
-        newsImgSrc = secNews.get("img")
-        newsHtmlSrc = secNews.get("html")
-
-        result.append(news_schema.News(
-                id=strNewsId,
-                html=newsHtmlSrc,
-                img=newsImgSrc,
-                title=newsTitle,
-                keywords=dic_keywords,
-                content=newsContent,
-        ))
    
-    return result
   
 
 @router.get("/news/{news_id}", response_model=news_schema.News)

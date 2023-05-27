@@ -220,7 +220,7 @@ def translate_with_gpt(title):
     completion = openai.ChatCompletion.create(
          model="gpt-3.5-turbo",
         messages=[{"role":"system","content":"You are the AI that good at English and Japanese. And you are the AI that familiar with information technology."},
-                  {"role":"user","content":f"Please translate into Japanese. Use your IT knowledge and cyber security knowledge. DO NOT output your comment.output ONLY translated title.\n{title}"}
+                  {"role":"user","content":f"Please translate 14words Japanese. Use your IT knowledge and cyber security knowledge. DO NOT output your comment.output ONLY translated title.\n{title}"}
     ])
     response = completion.choices[0].message.content
     return response
