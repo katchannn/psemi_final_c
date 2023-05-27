@@ -1,8 +1,7 @@
 from pymongo import MongoClient
 import pymongo
 import asyncio
-
-#関数ここに書いちゃったけどダメだったらservicesのnews.pyにコピペをお願いします
+from bson.objectid import ObjectId
 
 #mongoDBのやつ
 #env
@@ -22,16 +21,6 @@ async def connect_db():
     client = MongoClient(DATABASE_URL)
     return await asyncio.sleep(1)
 
-"""
-db = client["test"]
-my_collection = db["data"]
-
-data_1 = {
-     "Name":"test1",
-     "Age":25,
- }
-my_collection.insert_one(data_1)
-"""
 def db_create_title(title):
     print("タイトル挿入する")#デバッグプリント
     db = client["titles"]
@@ -80,21 +69,32 @@ def db_create_news(news,html,img_URL):
         "html":f"{html}",
         "img":f"{img_URL}",
         "title":f"{title}",
-        "keywords":f"{keywords}",
+        "keywords":keywords,
         "content":f"{content}"
     }
     my_collection.insert_one(data)
-
-def db_get_news(news_id):
-    #DB:newsのTABLE:dataから指定された行(news_id)をdic型で取得
-    secNews = my_collection.find().limit(1)[news_id]
-
-    #dic型を渡す
-    return secNews
-
-def db_get_newsCount():
-    #DB:newsのTABLE:dataの中にある行の数を数える
-    newsCount = my_collection.count_documents({})
-
-    return newsCount
     
+    
+def news_serializer(news) -> dict:
+    return {
+        "id": str(news["_id"]),
+        "html": news["html"],
+        "img": news["img"],
+        "title": news["title"],
+        "keywords": news["keywords"],
+        "content": news["content"]
+    } 
+    
+
+async def db_get_news(news_id) -> dict:
+    news = my_collection.find_one({"_id":ObjectId(news_id)})
+    news = news_serializer(news)
+    
+    return news
+
+    
+async def db_get_newsList() -> list:
+    newsDoc = my_collection.find().sort("_id",pymongo.DESCENDING)
+    newsList = [news_serializer(news) for news in newsDoc]
+    
+    return newsList
