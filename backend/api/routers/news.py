@@ -7,7 +7,6 @@ from cruds import news as news_crud
 
 router = APIRouter()
 
-
 @router.get("/news", response_model=List[news_schema.News])
 async def list_news():
     res = await news_crud.db_get_newsList()
@@ -20,3 +19,4 @@ async def detail_news(news_id: str):
     if res:
         return res
     raise HTTPException(status_code=404, detail="News not found")
+

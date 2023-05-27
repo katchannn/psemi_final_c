@@ -7,3 +7,4 @@ sub
 python-dotenv
 BeautifulSoup4
 pymongo
+cachetools
