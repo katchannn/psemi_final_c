@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <v-carousel show-arrows="hover" cycle hide-delimiter-background>
     <v-carousel-item
       v-for="i in 3"
@@ -62,10 +62,10 @@
       </v-card>
     </v-carousel-item>
   </v-carousel>
-</template> -->
+</template>
 
 <!-- かまたデザイン -->
-<template>
+<!-- <template>
   <v-card class="mx-auto ma-0 pa-0">
     <v-container fluid style="padding: 0%">
       <v-row no-gutters>
@@ -140,7 +140,7 @@
       </v-row>
     </v-container>
   </v-card>
-</template>
+</template> -->
 
 
 <script>
